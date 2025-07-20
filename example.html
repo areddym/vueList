@@ -1,0 +1,118 @@
+<template>
+  <v-container>
+    <v-card>
+      <v-card-title class="text-h6 font-weight-bold">Quick View</v-card-title>
+      <v-divider></v-divider>
+
+      <v-list dense>
+
+        <template v-for="(item, key, index) in filteredData" :key="index">
+          <!-- Special: Toggle Row -->
+          <template v-if="key === MainKey">
+            <v-list-item>
+              <v-list-item-content>
+                <v-list-item-title class="text-caption grey--text text--darken-1">
+                  {{ key }}
+                  <v-tooltip top>
+                    <template v-slot:activator="{ on, attrs }">
+                      <v-icon
+                        small
+                        class="ml-1"
+                        color="primary"
+                        v-bind="attrs"
+                        v-on="on"
+                      >
+                        mdi-information-outline
+                      </v-icon>
+                    </template>
+                    <span>{{ item.helpText }}</span>
+                  </v-tooltip>
+                </v-list-item-title>
+              </v-list-item-content>
+
+              <v-list-item-content class="text-right">
+                <span :class="item.valueFontStyle" class="mr-2">{{ item.value }}</span>
+                <v-switch
+                  v-model="escrowToggle"
+                  dense
+                  hide-details
+                  inset
+                ></v-switch>
+              </v-list-item-content>
+            </v-list-item>
+            <v-divider></v-divider>
+          </template>
+
+          <!-- Skip indented child rows if toggle is off -->
+          <template v-else-if="item.indent === 'true' && !escrowToggle">
+            <!-- Do not render -->
+          </template>
+
+          <!-- Normal or Indented Rows -->
+          <template v-else>
+            <v-list-item>
+              <v-list-item-content :class="item.indent === 'true' ? 'pl-8' : 'pl-2'">
+                <v-list-item-title
+                  class="text-caption grey--text text--darken-1"
+                >
+                  {{ key }}
+                </v-list-item-title>
+              </v-list-item-content>
+
+              <v-list-item-content class="text-right pr-2">
+                <!-- Lock Status with link for officer -->
+                <template v-if="key === 'Lock Status' && userRole === 'Loan Officer'">
+                  <v-btn text small color="primary" class="pa-0" @click="goToLockStatus">
+                    <span :class="item.valueFontStyle">{{ item.value }}</span>
+                  </v-btn>
+                </template>
+                <template v-else>
+                  <span :class="item.valueFontStyle">{{ item.value }}</span>
+                </template>
+              </v-list-item-content>
+            </v-list-item>
+            <v-divider></v-divider>
+          </template>
+        </template>
+
+      </v-list>
+    </v-card>
+  </v-container>
+</template>
+
+<script>
+export default {
+  name: "QuickView",
+  data() {
+    return {
+      escrowToggle: true,
+      userRole: "Officer", // Can be "Viewer", "Processor", etc.
+      MainKey: "Non-Escape associated with your property",
+      data: {
+        
+      }
+    };
+  },
+  computed: {
+    filteredData() {
+      return Object.fromEntries(
+        Object.entries(this.data).filter(
+          ([, item]) => item.visibility === "ALL"
+        )
+      );
+    }
+  },
+  methods: {
+    goToLockStatus() {
+      // Replace with your own navigation logic
+      alert("Navigating to Lock Status page...");
+    }
+  }
+};
+</script>
+
+<style scoped>
+.font-weight-bold {
+  font-weight: bold;
+}
+</style>
