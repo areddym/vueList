@@ -1,0 +1,129 @@
+<template>
+  <v-card class="pa-4">
+    <v-list dense>
+      <template v-for="(key, index) in orderedKeys" :key="index">
+        <v-list-item class="py-1" :class="quickViewData[key].rowClass || ''">
+          <v-row no-gutters align="center" class="w-100">
+            <!-- Left label with optional tooltip -->
+            <v-col cols="6" class="pl-2 text-left">
+              <div class="d-flex align-center">
+                <span class="font-weight-medium text-body-2">{{ key }}</span>
+                <v-tooltip v-if="quickViewData[key].helpText" top>
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-icon small class="ml-1" color="primary" v-bind="attrs" v-on="on">mdi-information-outline</v-icon>
+                  </template>
+                  <span>{{ quickViewData[key].helpText }}</span>
+                </v-tooltip>
+              </div>
+            </v-col>
+
+            <!-- Right value area with optional switch -->
+            <v-col cols="6" class="pr-2 d-flex justify-end align-center">
+              <!-- Show switch before value if toggle -->
+              <v-switch
+                v-if="quickViewData[key].isToggle"
+                v-model="quickViewData[key].enabled"
+                hide-details
+                dense
+                class="mr-2"
+                color="primary"
+                @change="onToggleChange(key)"
+              />
+              <span class="text-body-2">{{ quickViewData[key].value }}</span>
+
+              <!-- Special: Lock Status link for Loan Officer -->
+              <template v-if="key === 'Lock Status' && userRole === 'Loan Officer'">
+                <v-btn text small class="ml-2" @click="goToLockPage">
+                  View
+                </v-btn>
+              </template>
+            </v-col>
+          </v-row>
+        </v-list-item>
+
+        <!-- Child rows, shown only if toggle is ON -->
+        <template
+          v-if="quickViewData[key].isToggle && quickViewData[key].enabled && quickViewData[key].children"
+        >
+          <v-list-item
+            v-for="(child, childIndex) in quickViewData[key].children"
+            :key="childIndex"
+            class="py-1"
+            :class="child.rowClass || ''"
+          >
+            <v-row no-gutters align="center" class="w-100">
+              <v-col cols="6" class="pl-6 text-left">
+                <span class="text-body-2">{{ child.label }}</span>
+              </v-col>
+              <v-col cols="6" class="pr-2 d-flex justify-end align-center">
+                <span class="text-body-2">{{ child.value }}</span>
+              </v-col>
+            </v-row>
+          </v-list-item>
+        </template>
+      </template>
+    </v-list>
+  </v-card>
+</template>
+
+<script>
+export default {
+  name: 'QuickView',
+  data() {
+    return {
+      userRole: 'Loan Officer', // For example; dynamically fetch in real app
+      quickViewData: {
+        'Loan Number': { value: 'QAD1RT500322097', rowClass: '' },
+        'Loan Officer': { value: 'John Doe', rowClass: '' },
+        'Application Date': { value: '07/23/2025', rowClass: '' },
+        'Loan Term (# of months)': { value: '360', rowClass: '' },
+        'Occupancy': { value: 'Primary Residence', rowClass: '' },
+        'Purchase Price': { value: '$500,000.00', rowClass: '' },
+        'Total all borrower(s) liabilities Monthly Payment': { value: '$0.00', rowClass: 'child-indent' },
+        'Total all borrower(s) liabilities Unpaid Balance': { value: '$0.00', rowClass: 'child-indent' },
+        'Lock Status': { value: 'Locked', rowClass: '' },
+        'Product': { value: 'Correspondent 30 Yr Fixed', rowClass: '' },
+        'Loan Amount': { value: '$250,000.00', rowClass: '' },
+        'Rate': { value: '2.75%', rowClass: '' },
+        'APR': { value: '2.763%', rowClass: '' },
+        'Points': { value: '0.0', rowClass: '' },
+        'Estimated Closing Date': { value: '08/15/2025', rowClass: '' },
+        'Non-Escrowed payments associated with your property': {
+          value: '$270.00',
+          isToggle: true,
+          enabled: true,
+          rowClass: '',
+          helpText: 'Includes taxes and insurance you pay yourself.',
+          children: [
+            { label: 'Non-Escrowed Homeowner\'s Insurance', value: '$150.00', rowClass: 'child-indent' },
+            { label: 'Non-Escrowed Supplemental Property Insurance', value: '$0.00', rowClass: 'child-indent' },
+            { label: 'Non-Escrowed Taxes', value: '$120.00', rowClass: 'child-indent' }
+          ]
+        },
+        'HOA Dues': { value: '$0.00', rowClass: '' },
+        'Cash to Close': { value: '$252,520.08', rowClass: '' }
+      }
+    };
+  },
+  computed: {
+    orderedKeys() {
+      return Object.keys(this.quickViewData);
+    }
+  },
+  methods: {
+    onToggleChange(key) {
+      // Optional logic if needed
+    },
+    goToLockPage() {
+      // Replace with actual navigation logic
+      alert('Navigating to Lock page...');
+    }
+  }
+};
+</script>
+
+<style scoped>
+.child-indent {
+  padding-left: 24px;
+}
+</style>
