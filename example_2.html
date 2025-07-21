@@ -1,0 +1,107 @@
+<template>
+  <v-card class="pa-4" elevation="2">
+    <h3 class="mb-4 text-h6">Quick View</h3>
+
+    <v-list dense>
+      <template v-for="(key, index) in orderedKeys" :key="index">
+
+        <!-- v-switch row inside sequence -->
+        <v-list-item
+          v-if="key === 'Show Non-Escrowed Payments'"
+          class="py-2 px-2"
+        >
+          <v-switch
+            v-model="escrowToggle"
+            label="Show Non-Escrowed Payments"
+            class="w-100"
+            hide-details
+            inset
+          />
+          <v-divider class="my-1" />
+        </v-list-item>
+
+        <!-- Standard row with label + value -->
+        <v-list-item
+          v-else-if="!data[key].indent || escrowToggle"
+          class="py-2"
+        >
+          <v-row no-gutters class="w-100 align-center">
+            <!-- Label -->
+            <v-col
+              cols="12"
+              md="6"
+              :class="data[key].labelClass || 'pl-md-2 pl-2 text-left'"
+            >
+              <span class="text-caption grey--text text--darken-1">
+                {{ key }}
+                <v-tooltip v-if="data[key].helpText" top>
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-icon
+                      small
+                      class="ml-1"
+                      color="primary"
+                      v-bind="attrs"
+                      v-on="on"
+                    >
+                      mdi-information-outline
+                    </v-icon>
+                  </template>
+                  <span>{{ data[key].helpText }}</span>
+                </v-tooltip>
+              </span>
+            </v-col>
+
+            <!-- Value -->
+            <v-col
+              cols="12"
+              md="6"
+              :class="data[key].valueClass || 'pr-md-2 pr-2 text-right'"
+            >
+              <template v-if="key === 'Lock Status' && userRole === 'Loan Officer'">
+                <v-btn text small color="primary" class="pa-0" @click="goToLockStatus">
+                  {{ data[key].value }}
+                </v-btn>
+              </template>
+              <template v-else>
+                <span>{{ data[key].value }}</span>
+              </template>
+            </v-col>
+          </v-row>
+          <v-divider class="my-1" />
+        </v-list-item>
+
+      </template>
+    </v-list>
+  </v-card>
+</template>
+
+<script>
+export default {
+  name: "QuickView",
+  data() {
+    return {
+      userRole: "Loan Officer",
+      escrowToggle: false,
+      data: {
+        
+      }
+    };
+  },
+  computed: {
+    orderedKeys() {
+      return Object.keys(this.data);
+    }
+  },
+  methods: {
+    goToLockStatus() {
+      alert("Navigating to Lock Status...");
+    }
+  }
+};
+</script>
+
+<style scoped>
+.v-list-item {
+  border-bottom: 1px solid #eee;
+}
+</style>
