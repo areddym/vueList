@@ -1,0 +1,84 @@
+<template>
+  <v-container fluid class="py-0">
+    <v-row align="center" no-gutters>
+      <!-- Label with tooltip icon -->
+      <v-col cols="6" class="d-flex align-center">
+        <span>{{ label }}</span>
+
+        <v-tooltip
+          location="top"
+          :text="tooltipText"
+          max-width="300"
+          open-delay="100"
+          close-delay="100"
+        >
+          <template #activator="{ props }">
+            <v-icon
+              v-bind="props"
+              class="ml-2"
+              size="16"
+              color="primary"
+            >
+              mdi-help-circle-outline
+            </v-icon>
+          </template>
+        </v-tooltip>
+      </v-col>
+
+      <!-- Toggle + Value -->
+      <v-col cols="6" class="d-flex justify-end align-center">
+        <v-switch
+          v-model="model"
+          hide-details
+          density="compact"
+          inset
+          color="primary"
+          class="mr-2"
+        />
+        <span class="text-body-1 font-weight-medium">
+          ${{ amount.toFixed(2) }}
+        </span>
+      </v-col>
+    </v-row>
+  </v-container>
+</template>
+
+<script>
+export default {
+  name: 'ToggleWithTooltipRow',
+  props: {
+    label: {
+      type: String,
+      required: true
+    },
+    tooltipText: {
+      type: String,
+      required: true
+    },
+    modelValue: {
+      type: Boolean,
+      required: true
+    },
+    amount: {
+      type: Number,
+      required: true
+    }
+  },
+  computed: {
+    model: {
+      get() {
+        return this.modelValue;
+      },
+      set(value) {
+        this.$emit('update:modelValue', value);
+      }
+    }
+  }
+};
+</script>
+
+<style scoped>
+.v-icon {
+  cursor: pointer;
+}
+</style>
