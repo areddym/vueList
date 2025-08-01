@@ -1,0 +1,185 @@
+<template>
+  <v-card flat>
+    <v-list dense>
+      <v-list-item
+        v-for="key in orderedKeys"
+        :key="key"
+        class="px-2"
+        :class="[
+          quickViewData[key].indent ? 'pl-8' : 'pl-4',
+          'list-item-hover'
+        ]"
+        v-show="!quickViewData[key].indent || nonEscrowToggle"
+      >
+        <v-row no-gutters class="w-100">
+          <!-- Left Column -->
+          <v-col cols="7" class="d-flex align-center">
+            <span :class="quickViewData[key].keyFontStyle">
+              {{ key }}
+            </span>
+            <v-tooltip v-if="quickViewData[key].helpText" location="top">
+              <template #activator="{ props }">
+                <v-icon
+                  class="ml-1"
+                  color="primary"
+                  small
+                  v-bind="props"
+                >
+                  mdi-information-outline
+                </v-icon>
+              </template>
+              <span>{{ quickViewData[key].helpText }}</span>
+            </v-tooltip>
+          </v-col>
+
+          <!-- Right Column -->
+          <v-col cols="5" class="d-flex justify-end align-center">
+            <!-- Toggle only for this key -->
+            <v-switch
+              v-if="key === 'Non-Escrowed payments associated with your property:'"
+              v-model="nonEscrowToggle"
+              hide-details
+              density="compact"
+              class="mr-2"
+            />
+            <span :class="quickViewData[key].valueFontStyle" class="text-right">
+              {{ quickViewData[key].value }}
+            </span>
+          </v-col>
+        </v-row>
+        <v-divider class="mt-2" />
+      </v-list-item>
+    </v-list>
+  </v-card>
+</template>
+
+<script>
+export default {
+  name: "QuickView",
+  data() {
+    return {
+      nonEscrowToggle: false,
+      orderedKeys: [
+        "Principal & Interest",
+        "Homeowner's Insurance",
+        "Supplemental Property Insurance",
+        "Taxes",
+        "Mortgage Insurance Amount",
+        "Total Estimated Payment",
+        "Non-Escrowed payments associated with your property:",
+        "Non-Escrowed Homeowner's Insurance",
+        "Non-Escrowed Supplemental Property Insurance",
+        "Non-Escrowed Taxes",
+        "HOA Dues",
+        "Total Loan Amount",
+        "Cash to Close"
+      ],
+      quickViewData: {
+        "Principal & Interest": {
+          value: "$1,020.60",
+          visibility: "ALL",
+          keyFontStyle: "font-weight-bold",
+          valueFontStyle: "font-weight-bold",
+          pricingDependency: "Yes"
+        },
+        "Homeowner's Insurance": {
+          value: "$0.00",
+          visibility: "ALL",
+          keyFontStyle: "",
+          valueFontStyle: "font-weight-bold",
+          pricingDependency: "Yes"
+        },
+        "Supplemental Property Insurance": {
+          value: "$0.00",
+          visibility: "ALL",
+          keyFontStyle: "",
+          valueFontStyle: "font-weight-bold",
+          pricingDependency: "Yes"
+        },
+        Taxes: {
+          value: "$0.00",
+          visibility: "ALL",
+          keyFontStyle: "",
+          valueFontStyle: "font-weight-bold",
+          pricingDependency: "Yes"
+        },
+        "Mortgage Insurance Amount": {
+          value: "$0.00",
+          visibility: "ALL",
+          keyFontStyle: "",
+          valueFontStyle: "font-weight-bold",
+          pricingDependency: "Yes"
+        },
+        "Total Estimated Payment": {
+          value: "$1,020.60",
+          visibility: "ALL",
+          keyFontStyle: "font-weight-bold",
+          valueFontStyle: "font-weight-bold",
+          pricingDependency: "Yes"
+        },
+        "Non-Escrowed payments associated with your property:": {
+          value: "$270.00",
+          visibility: "ALL",
+          keyFontStyle: "font-weight-bold",
+          valueFontStyle: "font-weight-bold",
+          pricingDependency: "Yes",
+          helpText:
+            "Includes non-escrowed taxes and insurance along with HOA dues that you will pay directly to the provider/agency and not as part of your monthly mortgage payment."
+        },
+        "Non-Escrowed Homeowner's Insurance": {
+          value: "$150.00",
+          visibility: "ALL",
+          keyFontStyle: "",
+          valueFontStyle: "font-weight-bold",
+          pricingDependency: "Yes",
+          indent: "true"
+        },
+        "Non-Escrowed Supplemental Property Insurance": {
+          value: "$0.00",
+          visibility: "ALL",
+          keyFontStyle: "",
+          valueFontStyle: "font-weight-bold",
+          pricingDependency: "Yes",
+          indent: "true"
+        },
+        "Non-Escrowed Taxes": {
+          value: "$120.00",
+          visibility: "ALL",
+          keyFontStyle: "",
+          valueFontStyle: "font-weight-bold",
+          pricingDependency: "Yes",
+          indent: "true"
+        },
+        "HOA Dues": {
+          value: "$0.00",
+          visibility: "ALL",
+          keyFontStyle: "",
+          valueFontStyle: "font-weight-bold",
+          pricingDependency: "Yes"
+        },
+        "Total Loan Amount": {
+          value: "$250,000.00",
+          visibility: "ALL",
+          keyFontStyle: "",
+          valueFontStyle: "font-weight-bold",
+          pricingDependency: "Yes"
+        },
+        "Cash to Close": {
+          value: "$252,520.08",
+          visibility: "ALL",
+          keyFontStyle: "",
+          valueFontStyle: "font-weight-bold",
+          pricingDependency: "Yes"
+        }
+      }
+    };
+  }
+};
+</script>
+
+<style scoped>
+.list-item-hover:hover {
+  background-color: #f5f5f5;
+  transition: background-color 0.2s ease;
+}
+</style>
